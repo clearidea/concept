@@ -20,7 +20,7 @@ class User
 	public function show()
 	{
 		global $User;
-		$UM = new \Brain\Model\User();
+		$UM = new \Concept\Model\User();
 
 		$User = $UM->getById( $this->getParam( 'id' ) );
 		if( !$User )

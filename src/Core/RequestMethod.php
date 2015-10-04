@@ -6,7 +6,7 @@
  * Time: 5:04 PM
  */
 
-namespace Concept\Controller;
+namespace Concept\Core;
 
 class RequestMethod
 {

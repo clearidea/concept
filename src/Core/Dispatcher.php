@@ -1,6 +1,8 @@
 <?php
 
-namespace Concept\Controller;
+namespace Concept\Core;
+
+use \Neuron;
 
 /*
  * The question here is, should routes just be generated automatically?
@@ -15,8 +17,14 @@ namespace Concept\Controller;
 class Dispatcher
 {
 	private $_aRoutes;
-	private $_aParams;
+	private $_aParams = array();
 	private $_iDataType;
+	private $_Settings;
+
+	public function __construct( \Neuron\Setting\SettingManager $Settings )
+	{
+		$this->_Settings = $Settings;
+	}
 
 	/**
 	 * @param $sRoute
@@ -29,7 +37,6 @@ class Dispatcher
 		/**
 		 * controller/action
 		 *
-		 *
 		 */
 
 		$Route = $this->getRoute( $sRoute, $iMethod );
@@ -39,8 +46,8 @@ class Dispatcher
 
 		// todo: use controllerfactory..
 
-		$sController = "\Concept\Controller\\$Route[controller]";
-		$Controller = new $sController;
+		$sController = "$Route[controller]";
+		$Controller = new $sController( $this->_Settings );
 		$Controller->action( $Route[ 'method' ], $this->_aParams, $this->_iDataType );
 	}
 
@@ -71,6 +78,7 @@ class Dispatcher
 		{
 			$aParts = explode( '/', $Route[ 'route' ] );
 			array_shift( $aParts );
+
 			foreach( $aParts as $sPart )
 			{
 				if( substr( $sPart, 0, 1 ) == ':' )
@@ -90,8 +98,11 @@ class Dispatcher
 			}
 
 			$aUri = explode( '/', $sUri );
-			array_shift( $aUri );
+			//array_shift( $aUri );
 			$iOffset = 0;
+
+//			print_r( $aUri );
+
 			foreach( $aUri as $sPart )
 			{
 				if( $iOffset >= count( $aDetails ) )
@@ -112,6 +123,9 @@ class Dispatcher
 		}
 		else
 		{
+			if( $sUri[ 0 ] != '/' )
+				$sUri = '/'.$sUri;
+
 			if( $Route[ 'route' ] == $sUri )
 				return true;
 		}
@@ -137,7 +151,6 @@ class Dispatcher
 				{
 					if( is_array( $aParams ) )
 						$this->_aParams = $aParams;
-
 					return $Route;
 				}
 			}
@@ -170,7 +183,7 @@ class Dispatcher
 		{
 			$this->addRoute(
 				array(
-					'type'		 	=> \Concept\Controller\RequestMethod::GET,
+					'type'		 	=> \Concept\Core\RequestMethod::GET,
 					'route' 			=> "/$sController",
 					'controller' 	=> $sController,
 					'method' 		=> 'index'
@@ -184,7 +197,7 @@ class Dispatcher
 		{
 			$this->addRoute(
 				array(
-					'type'			=> \Concept\Controller\RequestMethod::GET,
+					'type'			=> \Concept\Core\RequestMethod::GET,
 					'route'			=> "/$sController/add",
 					'controller'	=> $sController,
 					'method'			=> 'add'
@@ -198,7 +211,7 @@ class Dispatcher
 		{
 			$this->addRoute(
 				array(
-					'type'			=> \Concept\Controller\RequestMethod::GET,
+					'type'			=> \Concept\Core\RequestMethod::GET,
 					'route'			=> "/$sController/:id",
 					'controller'	=> $sController,
 					'method'			=> 'show'
@@ -213,7 +226,7 @@ class Dispatcher
 		{
 			$this->addRoute(
 				array(
-					'type' 			=> \Concept\Controller\RequestMethod::GET,
+					'type' 			=> \Concept\Core\RequestMethod::GET,
 					'route'			=> "/$sController/:id/edit",
 					'controller'	=> $sController,
 					'method'			=> 'edit'
@@ -227,7 +240,7 @@ class Dispatcher
 		{
 			$this->addRoute(
 				array(
-					'type'			=> \Concept\Controller\RequestMethod::POST,
+					'type'			=> \Concept\Core\RequestMethod::POST,
 					'route'			=> "/$sController/:id",
 					'controller'	=> $sController,
 					'method'			=> 'update'
@@ -241,7 +254,7 @@ class Dispatcher
 		{
 			$this->addRoute(
 				array(
-					'type'			=> \Concept\Controller\RequestMethod::DELETE,
+					'type'			=> \Concept\Core\RequestMethod::DELETE,
 					'route'			=> "/$sController/:id",
 					'controller'	=> $sController,
 					'method'			=> 'delete'

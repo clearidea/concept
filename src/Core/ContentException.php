@@ -1,6 +1,6 @@
 <?php
 
-namespace Concept\Controller;
+namespace Concept\Core;
 
 
 class ContentException

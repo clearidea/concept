@@ -1,13 +1,15 @@
 <?php
 
 
-namespace Concept\Controller;
+namespace Concept\Core;
 
 class Controller
 	extends ControllerBase
 {
-	public function __construct()
-	{}
+	public function __construct( \Neuron\Setting\SettingManager $Settings )
+	{
+		parent::__construct( $Settings );
+	}
 
 	public function index()
 	{

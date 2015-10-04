@@ -1,6 +1,6 @@
 <?php
 
-namespace Concept\Controller;
+namespace Concept\Core;
 
 
 abstract class ControllerBase
@@ -9,11 +9,23 @@ abstract class ControllerBase
 	const JSON	= 2;
 	const XML	= 3;
 
-	private $_aParams;
+	private $_aParams = array();
 	private $_sRenderAction;
-	private $_aViewData;
+	private $_aViewData = array();
 	private $_iDataType;
+	private $_Settings;
+	private $_sViewPath;
 
+	public function __construct( \Neuron\Setting\SettingManager $Settings )
+	{
+		$this->_Settings = $Settings;
+		$this->_sViewPath = $Settings->get( 'paths', 'view_path' );
+	}
+
+	protected function getSetting( $sSection, $sName )
+	{
+		return $this->_Settings->get( $sSection, $sName );
+	}
 
 	//region ViewData
 	protected function setViewData( array $a )
@@ -84,8 +96,9 @@ abstract class ControllerBase
 		{
 			extract( $this->_aViewData );
 
-			$sPath = "Concept/View/" . $this->getClass() . "/$sAction.php";
-			require_once( $sPath );
+			$sViewPath = $this->_sViewPath . '/' . $this->getClass() . "/$sAction.php";
+
+			require_once( $this->_sViewPath . '/template.php' );
 		}
 		else if( $iType == self::JSON )
 		{
