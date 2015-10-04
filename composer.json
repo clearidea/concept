@@ -1,0 +1,25 @@
+{
+    "name": "clearidea/concept",
+    "description": "Neuron based MVC.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lee Jones",
+            "email": "lee@clearidea.us"
+        }
+    ],
+    "require": {
+        "clearidea/neuron": "0.5.9"
+
+    },
+    "require-dev": {
+        "phpunit/phpunit"               : "4.7.7",
+        "phpdocumentor/phpdocumentor"   : "2.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Concept\\": "src/"
+        }
+    }
+}
