@@ -1,5 +1,8 @@
 # Versions
 
+## 0.1.14 2015-12-20
+* Cleanup for IApplication.
+
 ## 0.1.13 2015-12-20
 * Makes WebApplicationBase abstract.
 

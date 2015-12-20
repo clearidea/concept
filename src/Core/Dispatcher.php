@@ -57,7 +57,7 @@ class Dispatcher
 
 		$sController	= "$Route[controller]";
 
-		$Controller = ControllerFactory::create( $sController, $this->_Settings );
+		$Controller = ControllerFactory::create( $sController, $this->getApplication() );
 
 		$Controller->action( $Route[ 'method' ], $this->_aParams, $this->_iDataType );
 		return true;
