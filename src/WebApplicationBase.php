@@ -7,8 +7,14 @@ use \Neuron;
 abstract class WebApplicationBase
 	extends Neuron\ApplicationBase
 {
-	private $_Settings;
 	private $_Dispatcher;
+
+	public function __construct()
+	{
+		parent::__construct();
+
+		// @todo: overwrite standard logging with file.
+	}
 
 	/**
 	 * @return mixed
@@ -37,24 +43,13 @@ abstract class WebApplicationBase
 	}
 
 	/**
-	 * @param Neuron\Setting\Source\ISettingSource $Source
-	 * @return $this
-	 */
-
-	public function setConfig( Neuron\Setting\Source\ISettingSource $Source )
-	{
-		$this->_Settings = new Neuron\Setting\SettingManager( $Source );
-		return $this;
-	}
-
-	/**
 	 * Called on application starting.
 	 * @return bool
 	 */
 
 	protected function onStart()
 	{
-		$this->_Dispatcher = new Core\Dispatcher( $this->_Settings );
+		$this->_Dispatcher = new Core\Dispatcher( $this );
 		$this->loadRoutes();
 		return true;
 	}
