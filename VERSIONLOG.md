@@ -1,6 +1,7 @@
 # Versions
 
 ## 0.1.13
+* Makes WebApplicationBase abstract.
 
 ## 0.1.12 2015-12-20
 * More unit tests.
