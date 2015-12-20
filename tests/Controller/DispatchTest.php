@@ -1,13 +1,5 @@
 <?php
 
-try
-{
-	$Dispatcher->dispatch( '/user/1', \Concept\Core\RequestMethod::DELETE );
-}
-catch( \Concept\Core\AuthException $ex )
-{
-	echo "No access for delete method.";
-}
 class DispatchTest
 	extends PHPUnit_Framework_TestCase
 {
@@ -16,9 +8,18 @@ class DispatchTest
 	public function setUp()
 	{
 
-		$this->_Dispatcher = new \Concept\Core\Dispatcher();
+		$this->_Dispatcher = new \Concept\Core\Dispatcher( new Neuron\Setting\SettingManager() );
 
 		$this->_Dispatcher->addResourcesForController( new \Concept\Core\User() );
+
+		try
+		{
+			$Dispatcher->dispatch( '/user/1', \Concept\Core\RequestMethod::DELETE );
+		}
+		catch( \Concept\Core\AuthException $ex )
+		{
+			echo "No access for delete method.";
+		}
 
 	}
 

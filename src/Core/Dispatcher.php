@@ -20,10 +20,16 @@ class Dispatcher
 	private $_aParams = array();
 	private $_iDataType;
 	private $_Settings;
+	private $_Application;
 
-	public function __construct( \Neuron\Setting\SettingManager $Settings )
+	public function getApplication()
 	{
-		$this->_Settings = $Settings;
+		return $this->_Application;
+	}
+
+	public function __construct( Neuron\IApplication $Application )
+	{
+		$this->_Application = $Application;
 	}
 
 	/**
@@ -39,16 +45,22 @@ class Dispatcher
 		 *
 		 */
 
+		$this->getApplication()->debug( "Dispatch route: $sRoute, Method: $iMethod" );
+
 		$Route = $this->getRoute( $sRoute, $iMethod );
 
 		if( !$Route )
+		{
+			$this->getApplication()->warning( "No route found for: $sRoute, Method: $iMethod" );
 			return false;
+		}
 
-		// todo: use controllerfactory..
+		$sController	= "$Route[controller]";
 
-		$sController = "$Route[controller]";
-		$Controller = new $sController( $this->_Settings );
+		$Controller = ControllerFactory::create( $sController, $this->_Settings );
+
 		$Controller->action( $Route[ 'method' ], $this->_aParams, $this->_iDataType );
+		return true;
 	}
 
 	protected function processRoute( $Route, $sUri )

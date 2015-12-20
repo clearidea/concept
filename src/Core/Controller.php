@@ -3,12 +3,14 @@
 
 namespace Concept\Core;
 
+use Neuron;
+
 class Controller
 	extends ControllerBase
 {
-	public function __construct( \Neuron\Setting\SettingManager $Settings )
+	public function __construct( Neuron\IApplication $Application )
 	{
-		parent::__construct( $Settings );
+		parent::__construct( $Application );
 	}
 
 	public function index()
