@@ -2,6 +2,7 @@
 
 namespace Concept\Core;
 
+use Neuron;
 
 abstract class ControllerBase
 {
@@ -13,18 +14,19 @@ abstract class ControllerBase
 	private $_sRenderAction;
 	private $_aViewData = array();
 	private $_iDataType;
-	private $_Settings;
+	private $_Application;
 	private $_sViewPath;
 
-	public function __construct( \Neuron\Setting\SettingManager $Settings )
+	public function __construct( Neuron\IApplication $Application )
 	{
-		$this->_Settings = $Settings;
-		$this->_sViewPath = $Settings->get( 'paths', 'view_path' );
+		$this->_Application = $Application;
+
+		$this->_sViewPath = $Application->getSetting( 'view_path', 'paths' );
 	}
 
-	protected function getSetting( $sSection, $sName )
+	protected function getApplication()
 	{
-		return $this->_Settings->get( $sSection, $sName );
+		return $this->_Application;
 	}
 
 	//region ViewData
@@ -97,7 +99,7 @@ abstract class ControllerBase
 			extract( $this->_aViewData );
 
 			$sViewPath = $this->_sViewPath . '/' . $this->getClass() . "/$sAction.php";
-
+			$this->getApplication()->debug( "render view: $sViewPath" );
 			require_once( $this->_sViewPath . '/template.php' );
 		}
 		else if( $iType == self::JSON )

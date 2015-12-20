@@ -4,7 +4,7 @@ namespace Concept;
 
 use \Neuron;
 
-abstract class WebApplicationBase
+class WebApplicationBase
 	extends Neuron\ApplicationBase
 {
 	private $_Settings;
@@ -14,7 +14,18 @@ abstract class WebApplicationBase
 	 * @return mixed
 	 */
 
-	abstract protected function loadRoutes();
+	protected function loadRoutes()
+	{
+		$this->addRoute(
+			[
+				'type'		 	=> Core\RequestMethod::GET,
+				'route' 			=> '/404/:missing',
+				'controller' 	=> '\Concept\Controller\System',
+				'method' 		=> '_404'
+			]
+		);
+
+	}
 
 	/**
 	 * @param array $aRoute
@@ -63,6 +74,16 @@ abstract class WebApplicationBase
 	{
 		$sRoute = $this->getParameter( 'route' );
 
-		$this->_Dispatcher->dispatch( $sRoute, Core\RequestMethod::GET );
+		if( !$this->_Dispatcher->dispatch( $sRoute, Core\RequestMethod::GET ) )
+		{
+			// 404
+
+			// call 404 route..
+			//
+			// Where does the default view live?
+
+			$this->_Dispatcher->dispatch( "404/{$this->getParameter($sRoute)}", Core\RequestMethod::GET );
+		}
 	}
+
 }
