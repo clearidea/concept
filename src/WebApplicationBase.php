@@ -4,7 +4,7 @@ namespace Concept;
 
 use \Neuron;
 
-class WebApplicationBase
+abstract class WebApplicationBase
 	extends Neuron\ApplicationBase
 {
 	private $_Settings;

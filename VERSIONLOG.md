@@ -1,6 +1,9 @@
 # Versions
 
-## 0.1.12
+## 0.1.13 2015-12-20
+* Makes WebApplicationBase abstract.
+
+## 0.1.12 2015-12-20
 * More unit tests.
 * Controllers now take IApplication as the constructor parameter.
 
