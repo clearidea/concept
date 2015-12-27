@@ -1,5 +1,10 @@
 # Versions
 
+## 0.1.15
+* Improves default index.php and config.ini files.
+* Adds bootstrap class and test.
+* Updates to examples.
+
 ## 0.1.14 2015-12-20
 * Cleanup for IApplication.
 
