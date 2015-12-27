@@ -1,6 +1,6 @@
 # Versions
 
-## 0.1.15
+## 0.1.15 2015-12-27
 * Improves default index.php and config.ini files.
 * Adds bootstrap class and test.
 * Updates to examples.
