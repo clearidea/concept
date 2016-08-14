@@ -2,9 +2,8 @@
 
 namespace Concept\Controller;
 
-
 class System
-	extends \Concept\Core\Controller
+	extends Controller
 {
 	public function index()
 	{
@@ -13,7 +12,6 @@ class System
 
 	public function _404()
 	{
-
 		$this->setViewData(
 			[
 				'missing' 	=> $this->getParam( 'missing' ),

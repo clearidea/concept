@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Concept\Core;
+namespace Concept\Controller;
 
-use Neuron;
+use Neuron\Application;
 
 class Controller
-	extends ControllerBase
+	extends Base
 {
-	public function __construct( Neuron\IApplication $Application )
+	public function __construct( Application\IApplication $Application )
 	{
 		parent::__construct( $Application );
 	}
@@ -24,6 +24,11 @@ class Controller
 	}
 
 	public function add()
+	{
+		throw new ControllerException( 'Method not implemented.' );
+	}
+
+	public function create()
 	{
 		throw new ControllerException( 'Method not implemented.' );
 	}

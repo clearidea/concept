@@ -1,5 +1,9 @@
 # Versions
 
+## 0.1.20
+
+* Updates for Neuron 0.6
+
 ## 0.1.15 2015-12-27
 * Improves default index.php and config.ini files.
 * Adds bootstrap class and test.

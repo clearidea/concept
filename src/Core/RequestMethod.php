@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: lee
- * Date: 8/14/15
- * Time: 5:04 PM
- */
 
 namespace Concept\Core;
 

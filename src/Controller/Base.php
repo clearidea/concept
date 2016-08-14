@@ -1,10 +1,11 @@
 <?php
 
-namespace Concept\Core;
+namespace Concept\Controller;
 
 use Neuron;
+use Neuron\Application;
 
-abstract class ControllerBase
+abstract class Base
 {
 	const HTML	= 1;
 	const JSON	= 2;
@@ -17,7 +18,7 @@ abstract class ControllerBase
 	private $_Application;
 	private $_sViewPath;
 
-	public function __construct( Neuron\IApplication $Application )
+	public function __construct( Application\IApplication $Application )
 	{
 		$this->_Application = $Application;
 
@@ -139,7 +140,9 @@ abstract class ControllerBase
 
 	public function getClass()
 	{
-		return join( '', array_slice( explode( '\\', get_class( $this ) ), -1 ) );
+		return get_class( $this );
+
+		//return join( '', array_slice( explode( '\\', get_class( $this ) ), -1 ) );
 	}
 }
 
