@@ -2,7 +2,9 @@
 
 namespace Concept\Core;
 
-use \Neuron;
+use Concept\Controller;
+use Neuron;
+use Neuron\Application;
 
 /*
  * The question here is, should routes just be generated automatically?
@@ -27,7 +29,7 @@ class Dispatcher
 		return $this->_Application;
 	}
 
-	public function __construct( Neuron\IApplication $Application )
+	public function __construct( Application\IApplication $Application )
 	{
 		$this->_Application = $Application;
 	}
@@ -57,7 +59,7 @@ class Dispatcher
 
 		$sController	= "$Route[controller]";
 
-		$Controller = ControllerFactory::create( $sController, $this->getApplication() );
+		$Controller = Controller\Factory::create( $sController, $this->getApplication() );
 
 		$Controller->action( $Route[ 'method' ], $this->_aParams, $this->_iDataType );
 		return true;
@@ -75,14 +77,14 @@ class Dispatcher
 			$sType = substr( $sUri, $iPos );
 
 			if( $sType == 'json' )
-				$this->_iDataType = ControllerBase::JSON;
+				$this->_iDataType = Controller\Base::JSON;
 			else if( $sType == 'xml' )
-				$this->_iDataType = ControllerBase::XML;
+				$this->_iDataType = Controller\Base::XML;
 
 			$sUri = substr( $sUri, 0, strlen( $sUri ) - strlen( $sType ) - 1);
 		}
 		else
-			$this->_iDataType = ControllerBase::HTML;
+			$this->_iDataType = Controller\Base::HTML;
 
 		// Does route have parameters?
 
@@ -185,7 +187,7 @@ class Dispatcher
 	 * @param Controller $Controller
 	 */
 
-	public function addResourcesForController( Controller $Controller )
+	public function addResourcesForController( Controller\Controller $Controller )
 	{
 		$sController = strtolower( $Controller->getClass() );
 
@@ -213,6 +215,18 @@ class Dispatcher
 					'route'			=> "/$sController/add",
 					'controller'	=> $sController,
 					'method'			=> 'add'
+				)
+			);
+		}
+
+		if( $Controller->doesMethodExist( 'create' ) )
+		{
+			$this->addRoute(
+				array(
+					'type'			=> \Concept\Core\RequestMethod::POST,
+					'route'			=> "/$sController/create",
+					'controller'	=> $sController,
+					'method'			=> 'create'
 				)
 			);
 		}

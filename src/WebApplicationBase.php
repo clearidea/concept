@@ -4,8 +4,7 @@ namespace Concept;
 
 use \Neuron;
 
-abstract class WebApplicationBase
-	extends Neuron\ApplicationBase
+abstract class WebApplicationBase extends Neuron\Application\Base
 {
 	private $_Dispatcher;
 

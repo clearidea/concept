@@ -7,14 +7,19 @@ class DispatchTest
 
 	public function setUp()
 	{
+		$App = $this->getMockForAbstractClass( '\Concept\WebApplicationBase' );
 
-		$this->_Dispatcher = new \Concept\Core\Dispatcher( new Neuron\Setting\SettingManager() );
+		$Config = new \Neuron\Setting\Source\Ini( 'example/config.ini' );
 
-		$this->_Dispatcher->addResourcesForController( new \Concept\Core\User() );
+		$App->setConfig( $Config );
+
+		$this->_Dispatcher = new \Concept\Core\Dispatcher( $App );
+
+		$this->_Dispatcher->addResourcesForController( new \Concept\Controller\User( $App ) );
 
 		try
 		{
-			$Dispatcher->dispatch( '/user/1', \Concept\Core\RequestMethod::DELETE );
+			$this->_Dispatcher->dispatch( '/user/1', \Concept\Core\RequestMethod::DELETE );
 		}
 		catch( \Concept\Core\AuthException $ex )
 		{

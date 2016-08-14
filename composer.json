@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "clearidea/neuron": "0.5.*"
+        "clearidea/neuron": "0.6.*"
 
     },
     "require-dev": {

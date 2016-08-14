@@ -9,8 +9,7 @@
 namespace Concept\Controller;
 
 
-class User
-	extends Controller
+class User extends Controller
 {
 	public function index()
 	{

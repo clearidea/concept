@@ -1,6 +1,6 @@
 <?php
 
-namespace Concept\Core;
+namespace Concept\Controller;
 
 class ControllerException
 	extends \Exception
