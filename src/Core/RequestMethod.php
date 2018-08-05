@@ -4,14 +4,18 @@ namespace Concept\Core;
 
 class RequestMethod
 {
-	const PUT		= 1;
-	const POST		= 2;
-	const GET		= 3;
-	const HEAD		= 4;
-	const DELETE	= 5;
-	const OPTIONS	= 6;
-	const UNKNOWN	= 256;
+	const PUT      = 1;
+	const POST     = 2;
+	const GET      = 3;
+	const HEAD     = 4;
+	const DELETE   = 5;
+	const OPTIONS  = 6;
+	const UNKNOWN  = 256;
 
+	/**
+	 * Gets the text string for a type.
+	 * @return int
+	 */
 	static public function getType()
 	{
 		$method = $_SERVER['REQUEST_METHOD'];

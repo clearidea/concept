@@ -11,10 +11,10 @@ namespace Concept\Core;
 
 interface IAuthenticator
 {
-	const CREATE	= 1;
-	const READ		= 2;
-	const UPDATE	= 4;
-	const DELETE	= 8;
+	const CREATE   = 1;
+	const READ     = 2;
+	const UPDATE   = 4;
+	const DELETE   = 8;
 
 	public function authenticateWithUserNameAndPassword( $sUserName, $sPassword );
 	public function validateToken( $sToken );

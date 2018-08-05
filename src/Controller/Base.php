@@ -7,10 +7,6 @@ use Neuron\Application;
 
 abstract class Base
 {
-	const HTML	= 1;
-	const JSON	= 2;
-	const XML	= 3;
-
 	private $_aParams = array();
 	private $_sRenderAction;
 	private $_aViewData = array();
@@ -31,9 +27,9 @@ abstract class Base
 	}
 
 	//region ViewData
-	protected function setViewData( array $a )
+	protected function setViewData( array $data )
 	{
-		$this->_aViewData = $a;
+		$this->_aViewData = $data;
 	}
 
 	protected function setRenderAction( $sAction )
@@ -62,19 +58,29 @@ abstract class Base
 
 	protected function xmlEncode( $aViewData )
 	{
-		echo xml_encode( $this->_aViewData );
+		echo xml_encode( $aViewData );
 	}
 	//endregion
 
 	//region Parameters
+
+	/**
+	 * @param $sParam
+	 * @return bool|mixed
+	 */
 	protected function getParam( $sParam )
 	{
 		if( !isset( $this->_aParams[ $sParam ] ) )
+		{
 			return false;
+		}
 
 		return $this->_aParams[ $sParam ];
 	}
 
+	/**
+	 * @param array $aParams
+	 */
 	public function setParams( array $aParams )
 	{
 		$this->_aParams = $aParams;
@@ -82,24 +88,39 @@ abstract class Base
 	//endregion
 
 	//region Rendering
+
+	/**
+	 * @return mixed
+	 */
 	protected function getRenderAction()
 	{
 		return $this->_sRenderAction;
 	}
 
+	/**
+	 * @param null $sAction
+	 * @param int $iType
+	 */
 	protected function render( $sAction = null, $iType = 0 )
 	{
 		if( !$sAction)
+		{
 			$sAction = $this->getRenderAction();
+		}
 
 		if( !$iType )
+		{
 			$iType = $this->getDataType();
+		}
 
 		if( $iType == self::HTML )
 		{
 			extract( $this->_aViewData );
 
-			$sViewPath = $this->_sViewPath . '/' . $this->getClass() . "/$sAction.php";
+			$Path = explode( '\\', $this->getClass() );
+
+			$sViewPath = $this->_sViewPath . '/' . $Path[ count( $Path ) - 1 ] . "/$sAction.php";
+
 			$this->getApplication()->debug( "render view: $sViewPath" );
 			require_once( $this->_sViewPath . '/template.php' );
 		}
@@ -118,16 +139,29 @@ abstract class Base
 	public function callMethod( $sMethod )
 	{
 		if( !method_exists( $this, $sMethod ) )
+		{
 			throw new ControllerException( "Method '$sMethod'' not found." );
+		}
 
 		return $this->$sMethod();
 	}
 
+	/**
+	 * Checks if a controller method exists.
+	 * @param $sMethod
+	 * @return bool
+	 */
 	public function doesMethodExist( $sMethod )
 	{
 		return method_exists( $this, $sMethod );
 	}
 
+	/**
+	 * Executes a controller action.
+	 * @param $sAction
+	 * @param array $aParams
+	 * @param $iDataType
+	 */
 	public function action( $sAction, array $aParams, $iDataType )
 	{
 		$this->setDataType( $iDataType );
@@ -138,11 +172,12 @@ abstract class Base
 	}
 	//endregion
 
+	/**
+	 * @return string
+	 */
 	public function getClass()
 	{
 		return get_class( $this );
-
-		//return join( '', array_slice( explode( '\\', get_class( $this ) ), -1 ) );
 	}
 }
 

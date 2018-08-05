@@ -3,6 +3,8 @@
 namespace Concept\Core;
 
 use Concept\Controller;
+use Concept\Core\RequestMethod;
+
 use Neuron;
 use Neuron\Application;
 
@@ -21,7 +23,6 @@ class Dispatcher
 	private $_aRoutes;
 	private $_aParams = array();
 	private $_iDataType;
-	private $_Settings;
 	private $_Application;
 
 	public function getApplication()
@@ -65,11 +66,13 @@ class Dispatcher
 		return true;
 	}
 
-	protected function processRoute( $Route, $sUri )
-	{
-		$aDetails	= array();
-		$aParams		= array();
+	/**
+	 *
+	 */
 
+	protected function processRouteExtension()
+	{
+		$sUri = '';
 		$iPos = strripos( $sUri, '.' );
 		if( $iPos )
 		{
@@ -77,14 +80,33 @@ class Dispatcher
 			$sType = substr( $sUri, $iPos );
 
 			if( $sType == 'json' )
+			{
 				$this->_iDataType = Controller\Base::JSON;
+			}
 			else if( $sType == 'xml' )
+			{
 				$this->_iDataType = Controller\Base::XML;
+			}
 
 			$sUri = substr( $sUri, 0, strlen( $sUri ) - strlen( $sType ) - 1);
 		}
 		else
+		{
 			$this->_iDataType = Controller\Base::HTML;
+		}
+	}
+
+	/**
+	 * @param $Route
+	 * @param $sUri
+	 * @return array|bool
+	 */
+	protected function processRoute( $Route, $sUri )
+	{
+		$aDetails	= array();
+		$aParams		= array();
+
+		$sUri = $this->processRouteExtension();
 
 		// Does route have parameters?
 
@@ -112,20 +134,22 @@ class Dispatcher
 			}
 
 			$aUri = explode( '/', $sUri );
-			//array_shift( $aUri );
-			$iOffset = 0;
 
-//			print_r( $aUri );
+			$iOffset = 0;
 
 			foreach( $aUri as $sPart )
 			{
 				if( $iOffset >= count( $aDetails ) )
+				{
 					return false;
+				}
 
 				if( $aDetails[ $iOffset ][ 'action' ] )
 				{
 					if( $aDetails[ $iOffset ][ 'action' ] != $sPart )
+					{
 						return false;
+					}
 				}
 				else
 				{
@@ -138,10 +162,14 @@ class Dispatcher
 		else
 		{
 			if( $sUri[ 0 ] != '/' )
-				$sUri = '/'.$sUri;
+			{
+				$sUri = '/' . $sUri;
+			}
 
 			if( $Route[ 'route' ] == $sUri )
+			{
 				return true;
+			}
 		}
 
 		return false;
@@ -164,7 +192,9 @@ class Dispatcher
 				if( $aParams )
 				{
 					if( is_array( $aParams ) )
+					{
 						$this->_aParams = $aParams;
+					}
 					return $Route;
 				}
 			}
@@ -184,7 +214,35 @@ class Dispatcher
 	}
 
 	/**
-	 * @param Controller $Controller
+	 * Builts the array parameters for the addRoute method.
+	 * @param $Type
+	 * @param $sController
+	 * @param $sMethod
+	 * @param $sAction
+	 * @return array
+	 */
+
+	public function buildRouteParams( $Type, $sController, $sMethod, $sAction = '' )
+	{
+		if( $sAction )
+		{
+			$sRoute = "/$sController/$sAction";
+		}
+		else
+		{
+			$sRoute = "/$sController";
+		}
+
+		return [
+			'type'		 	=> $Type,
+			'route' 			=> $sRoute,
+			'controller' 	=> $sController,
+			'method' 		=> $sMethod
+		];
+	}
+
+	/**
+	 * @param Controller\Controller $Controller
 	 */
 
 	public function addResourcesForController( Controller\Controller $Controller )
@@ -195,97 +253,47 @@ class Dispatcher
 
 		if( $Controller->doesMethodExist( 'index' ) )
 		{
-			$this->addRoute(
-				array(
-					'type'		 	=> \Concept\Core\RequestMethod::GET,
-					'route' 			=> "/$sController",
-					'controller' 	=> $sController,
-					'method' 		=> 'index'
-				)
-			);
+			$this->addRoute( $this->buildRouteParams( RequestMethod::GET, $sController, 'index' ) );
 		}
 
 		// add
 
 		if( $Controller->doesMethodExist( 'add' ) )
 		{
-			$this->addRoute(
-				array(
-					'type'			=> \Concept\Core\RequestMethod::GET,
-					'route'			=> "/$sController/add",
-					'controller'	=> $sController,
-					'method'			=> 'add'
-				)
-			);
+			$this->addRoute( $this->buildRouteParams( RequestMethod::GET, $sController, 'add', 'add' ) );
 		}
 
 		if( $Controller->doesMethodExist( 'create' ) )
 		{
-			$this->addRoute(
-				array(
-					'type'			=> \Concept\Core\RequestMethod::POST,
-					'route'			=> "/$sController/create",
-					'controller'	=> $sController,
-					'method'			=> 'create'
-				)
-			);
+			$this->addRoute( $this->buildRouteParams( RequestMethod::POST, $sController, 'create', 'create' ) );
 		}
 
 		// show
 
 		if( $Controller->doesMethodExist( 'show' ) )
 		{
-			$this->addRoute(
-				array(
-					'type'			=> \Concept\Core\RequestMethod::GET,
-					'route'			=> "/$sController/:id",
-					'controller'	=> $sController,
-					'method'			=> 'show'
-				)
-			);
+			$this->addRoute( $this->buildRouteParams( RequestMethod::GET, $sController, 'show', ':id' ) );
 		}
-
 
 		// edit
 
 		if( $Controller->doesMethodExist( 'edit' ) )
 		{
-			$this->addRoute(
-				array(
-					'type' 			=> \Concept\Core\RequestMethod::GET,
-					'route'			=> "/$sController/:id/edit",
-					'controller'	=> $sController,
-					'method'			=> 'edit'
-				)
-			);
+			$this->addRoute( $this->buildRouteParams( RequestMethod::GET, $sController, 'edit', ':id/edit' ) );
 		}
 
 		// update
 
 		if( $Controller->doesMethodExist( 'update' ) )
 		{
-			$this->addRoute(
-				array(
-					'type'			=> \Concept\Core\RequestMethod::POST,
-					'route'			=> "/$sController/:id",
-					'controller'	=> $sController,
-					'method'			=> 'update'
-				)
-			);
+			$this->addRoute( $this->buildRouteParams( RequestMethod::POST, $sController, 'update', ':id' ) );
 		}
 
 		// destroy
 
 		if( $Controller->doesMethodExist( 'delete' ) )
 		{
-			$this->addRoute(
-				array(
-					'type'			=> \Concept\Core\RequestMethod::DELETE,
-					'route'			=> "/$sController/:id",
-					'controller'	=> $sController,
-					'method'			=> 'delete'
-				)
-			);
+			$this->addRoute( $this->buildRouteParams( RequestMethod::DELETE, $sController, 'delete', ':id' ) );
 		}
 	}
 }
