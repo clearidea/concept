@@ -1,8 +1,9 @@
 # Versions
 
-## 0.1.20
+## 0.1.16 2018-08-05
 
 * Updates for Neuron 0.6
+* Fix to view render.
 
 ## 0.1.15 2015-12-27
 * Improves default index.php and config.ini files.

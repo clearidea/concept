@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Concept\Controller;
 
 use Neuron\Application;

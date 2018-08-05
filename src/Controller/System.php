@@ -2,8 +2,7 @@
 
 namespace Concept\Controller;
 
-class System
-	extends Controller
+class System extends Controller
 {
 	public function index()
 	{
