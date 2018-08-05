@@ -1,6 +1,6 @@
 # Versions
 
-## 0.1.16
+## 0.1.16 2018-08-05
 
 * Updates for Neuron 0.6
 * Fix to view render.
