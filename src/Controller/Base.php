@@ -7,6 +7,10 @@ use Neuron\Application;
 
 abstract class Base
 {
+	const HTML = 1;
+	const XML  = 2;
+	const JSON = 3;
+
 	private $_aParams = array();
 	private $_sRenderAction;
 	private $_aViewData = array();
