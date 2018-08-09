@@ -1,5 +1,7 @@
 # Versions
 
+## 0.1.24
+
 ## 0.1.23 2018-08-[9
 * Fix to dispatcher.
 
