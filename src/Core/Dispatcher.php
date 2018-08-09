@@ -58,6 +58,7 @@ class Dispatcher
 			return false;
 		}
 
+		$this->getApplication()->debug( "Matched route: $Route[route]" );
 		$sController	= "$Route[controller]";
 
 		$Controller = Controller\Factory::create( $sController, $this->getApplication() );
@@ -70,9 +71,8 @@ class Dispatcher
 	 *
 	 */
 
-	protected function processRouteExtension()
+	protected function processRouteExtension( $sUri )
 	{
-		$sUri = '';
 		$iPos = strripos( $sUri, '.' );
 		if( $iPos )
 		{
@@ -103,10 +103,14 @@ class Dispatcher
 	 */
 	protected function processRoute( $Route, $sUri )
 	{
+		$this->getApplication()->debug( "-Route: $Route[route], Uri: $sUri." );
+
 		$aDetails	= array();
 		$aParams		= array();
 
-		$sUri = $this->processRouteExtension();
+		$this->processRouteExtension( $sUri );
+
+		$this->getApplication()->debug( "Uri: $sUri." );
 
 		// Does route have parameters?
 
@@ -165,6 +169,9 @@ class Dispatcher
 			{
 				$sUri = '/' . $sUri;
 			}
+
+			$this->getApplication()->debug( "Route: $Route[route], Uri: $sUri." );
+
 
 			if( $Route[ 'route' ] == $sUri )
 			{
